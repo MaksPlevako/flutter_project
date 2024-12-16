@@ -49,13 +49,12 @@ class OurBottomNavBar extends StatelessWidget {
             break;
         }
       },
-      selectedItemColor: Colors.black, // Цвет для активной иконки
-      unselectedItemColor: Colors.grey, // Цвет для неактивной иконки
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.grey,
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       backgroundColor: Colors.white,
-
       items: [
         BottomNavigationBarItem(
           icon: _buildCustomIcon(
