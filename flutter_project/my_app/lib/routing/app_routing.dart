@@ -31,7 +31,7 @@ final GoRouter appRouter = GoRouter(
       name: NavRoutes.list.name,
       path: NavRoutes.list.path,
       builder: (BuildContext context, GoRouterState state) {
-        return const ListScreen(title: 'Home Page');
+        return const ListScreen();
       },
     ),
     GoRoute(

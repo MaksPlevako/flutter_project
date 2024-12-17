@@ -2,75 +2,140 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app/common/ui/our_app_bar.dart';
 import 'package:my_app/common/ui/our_bottom_nav_bar.dart';
-import 'package:my_app/data/activities_data/fire.dart';
-import 'package:my_app/data/activities_data/ice.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
-  const ListScreen({super.key, required this.title});
-  final String title;
+  const ListScreen({super.key});
 
   @override
   ConsumerState<ListScreen> createState() => _ListScreenState();
 }
 
 class _ListScreenState extends ConsumerState<ListScreen> {
+  List<Map<String, dynamic>> items = [
+    {
+      'checkbox': true,
+      'title': "Shower",
+      'hour': 7,
+      'minute': 30,
+    },
+    {
+      'checkbox': false,
+      'title': "Brushtalk",
+      'hour': 8,
+      'minute': 0,
+    },
+    {
+      'checkbox': false,
+      'title': "Meditation",
+      'hour': 6,
+      'minute': 30,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const OurAppBar(),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Отображаем значение fire
-              const Text('Fire'),
-              const SizedBox(width: 5),
-              // Кнопка для увеличения fire
-              IconButton(
-                onPressed: () {
-                  // Увеличиваем значение fire при нажатии
-                  ref.read(fireProvider.notifier).incrementFire();
-                },
-                icon: const Icon(Icons.add),
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.sizeOf(context).width / 1.1,
+              margin: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.white, width: 1),
+                borderRadius: BorderRadius.circular(16),
               ),
-              const SizedBox(width: 5),
-              // Кнопка для уменьшения fire
-              IconButton(
-                onPressed: () {
-                  // Уменьшаем значение fire при нажатии
-                  ref.read(fireProvider.notifier).decrementFire();
-                },
-                icon: const Icon(Icons.remove),
+              clipBehavior: Clip.hardEdge,
+              child: ExpansionTile(
+                backgroundColor: Colors.white,
+                collapsedBackgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero),
+                collapsedShape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero),
+                title: const Text(
+                  "Morning Routine",
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+                ),
+                children: [
+                  ReorderableListView(
+                    shrinkWrap: true,
+                    clipBehavior: Clip.none,
+                    padding: const EdgeInsets.only(left: 12, right: 12),
+                    physics: const NeverScrollableScrollPhysics(),
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) newIndex--;
+                        final item = items.removeAt(oldIndex);
+                        items.insert(newIndex, item);
+                      });
+                    },
+                    children: [
+                      for (int index = 0; index < items.length; index++)
+                        Container(
+                          key: ValueKey(index),
+                          margin: const EdgeInsets.only(bottom: 6, top: 6),
+                          decoration: BoxDecoration(
+                            color: items[index]['checkbox']
+                                ? Colors.orange
+                                : Colors.grey[50],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                setState(() {
+                                  items[index]['checkbox'] =
+                                      !items[index]['checkbox'];
+                                });
+                              },
+                              child: ListTile(
+                                key: ValueKey(index),
+                                horizontalTitleGap: 12.0,
+                                leading: Checkbox(
+                                  value: items[index]['checkbox'],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      items[index]['checkbox'] = value;
+                                    });
+                                  },
+                                ),
+                                title: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        items[index]['title'],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 20),
+                                      child: Text(
+                                        '${items[index]['hour'].toString().padLeft(2, '0')}:${items[index]['minute'].toString().padLeft(2, '0')} PM',
+                                        style: TextStyle(
+                                          decoration: items[index]['checkbox']
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Отображаем значение fire
-              const Text('Ice'),
-              const SizedBox(width: 5),
-              // Кнопка для увеличения fire
-              IconButton(
-                onPressed: () {
-                  // Увеличиваем значение fire при нажатии
-                  ref.read(iceProvider.notifier).incrementIce();
-                },
-                icon: const Icon(Icons.add),
-              ),
-              const SizedBox(width: 5),
-              // Кнопка для уменьшения fire
-              IconButton(
-                onPressed: () {
-                  // Уменьшаем значение fire при нажатии
-                  ref.read(iceProvider.notifier).decrementIce();
-                },
-                icon: const Icon(Icons.remove),
-              ),
-            ],
-          )
-        ],
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: const OurBottomNavBar(),
     );

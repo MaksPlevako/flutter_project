@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_app/data/activities_data/fire.dart';
-import 'package:my_app/data/activities_data/ice.dart';
+import 'package:my_app/data/activities_data/fire_state.dart';
+import 'package:my_app/data/activities_data/ice_state.dart';
 import 'package:my_app/routing/app_routing.dart';
 
 class OurAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
