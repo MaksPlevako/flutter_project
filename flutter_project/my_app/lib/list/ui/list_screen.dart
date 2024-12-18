@@ -14,14 +14,16 @@ class ListScreen extends ConsumerStatefulWidget {
 class _ListScreenState extends ConsumerState<ListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const OurAppBar(),
-      body: Center(
-        child: Column(
-          children: [MorningRoutineList()],
+    return const SafeArea(
+      child: Scaffold(
+        appBar: OurAppBar(),
+        body: Center(
+          child: Column(
+            children: [MorningRoutineList()],
+          ),
         ),
+        bottomNavigationBar: OurBottomNavBar(),
       ),
-      bottomNavigationBar: const OurBottomNavBar(),
     );
   }
 }
