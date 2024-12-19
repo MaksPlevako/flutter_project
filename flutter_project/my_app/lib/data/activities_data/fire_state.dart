@@ -22,6 +22,8 @@ class FireNotifier extends StateNotifier<FireState> {
   }
 }
 
-final fireProvider = StateNotifierProvider<FireNotifier, FireState>((ref) {
-  return FireNotifier();
-});
+final fireProvider = StateNotifierProvider<FireNotifier, FireState>(
+  (ref) {
+    return FireNotifier();
+  },
+);

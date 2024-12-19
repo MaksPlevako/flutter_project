@@ -102,7 +102,14 @@ class _OurAppBar extends ConsumerState<OurAppBar> {
             ),
             CircleAvatar(
               child: IconButton(
-                onPressed: () => context.go('/login'),
+                onPressed: () {
+                  const bool user = false;
+                  if (user) {
+                    context.goNamed(NavRoutes.profile.name);
+                  } else {
+                    context.goNamed(NavRoutes.register.name);
+                  }
+                },
                 icon: Image.network(
                   'https://cdn-icons-png.flaticon.com/512/147/147144.png',
                 ),

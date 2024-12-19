@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_app/authentication/login/ui/login_screen.dart';
+import 'package:my_app/authentication/register/ui/register_screen.dart';
 import 'package:my_app/list/ui/list_screen.dart';
 import 'package:my_app/list/ui/new_morning_routine.dart';
 import 'package:my_app/settings/ui/settings_screen.dart';
@@ -12,7 +14,10 @@ enum NavRoutes {
   actions('actions', '/actions'),
   chart('chart', '/chart'),
   block('block', '/block'),
-  people('people', '/people');
+  people('people', '/people'),
+  login('login', '/login'),
+  register('register', '/register'),
+  profile('profile', '/profile');
 
   final String name;
   final String path;
@@ -54,6 +59,27 @@ final GoRouter appRouter = GoRouter(
             );
           },
         );
+      },
+    ),
+    GoRoute(
+      name: NavRoutes.login.name,
+      path: NavRoutes.login.path,
+      builder: (BuildContext context, GoRouterState state) {
+        return LoginScreen();
+      },
+    ),
+    GoRoute(
+      name: NavRoutes.register.name,
+      path: NavRoutes.register.path,
+      builder: (BuildContext context, GoRouterState state) {
+        return RegisterScreen();
+      },
+    ),
+    GoRoute(
+      name: NavRoutes.profile.name,
+      path: NavRoutes.profile.path,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ListScreen();
       },
     ),
     GoRoute(
