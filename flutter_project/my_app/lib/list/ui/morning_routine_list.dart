@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_app/list/models/morning_routine_model.dart';
 import 'package:my_app/list/service/morning_routine_service.dart';
-
-import 'new_morning_routine.dart';
+import '../../routing/app_routing.dart';
 
 class MorningRoutineList extends StatefulWidget {
   const MorningRoutineList({super.key});
@@ -175,7 +175,35 @@ class _MorningRoutineListState extends State<MorningRoutineList> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    NewMorningRoutine(),
+                                    TextButton(
+                                      onPressed: () => context.pushNamed(
+                                          NavRoutes
+                                              .create_morning_routine.name, extra: items.length),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.add_circle_outline,
+                                              color: Colors.orange,
+                                            ),
+                                            SizedBox(width: 12),
+                                            Text(
+                                              'Add Task',
+                                              style: TextStyle(
+                                                color: Colors.orange,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

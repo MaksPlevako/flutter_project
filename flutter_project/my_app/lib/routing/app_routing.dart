@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_app/list/ui/list_screen.dart';
+import 'package:my_app/list/ui/new_morning_routine.dart';
 import 'package:my_app/settings/ui/settings_screen.dart';
 
 enum NavRoutes {
   main('main', '/'),
   settings('settings', '/settings'),
+  create_morning_routine('new_routine', '/new_routine'),
   list('list', '/list'),
   actions('actions', '/actions'),
   chart('chart', '/chart'),
@@ -32,6 +34,26 @@ final GoRouter appRouter = GoRouter(
       path: NavRoutes.list.path,
       builder: (BuildContext context, GoRouterState state) {
         return const ListScreen();
+      },
+    ),
+    GoRoute(
+      name: NavRoutes.create_morning_routine.name,
+      path: NavRoutes.create_morning_routine.path,
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return CustomTransitionPage(
+          opaque: false,
+          child: Material(
+            color: Colors.transparent,
+            child: NewMorningRoutine(listLength: state.extra as int),
+          ),
+          transitionsBuilder: (_, animation, __, child) {
+            return FadeTransition(
+              opacity:
+                  CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+              child: child,
+            );
+          },
+        );
       },
     ),
     GoRoute(

@@ -6,10 +6,15 @@ class MorningRoutineService {
 
   // Create a new MorningRoutine
   Future<void> createMorningRoutine(MorningRoutineModel routine) async {
-    await _db
-        .collection('morning_routines')
-        .doc(routine.id)
-        .set(routine.toMap());
+    try {
+      await _db
+          .collection('morning_routines')
+          .doc(routine.id)
+          .set(routine.toMap());
+      print("Morning routine added successfully!");
+    } catch (e) {
+      print("Error adding morning routine: $e");
+    }
   }
 
   // Read a MorningRoutine by ID
