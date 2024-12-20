@@ -18,7 +18,7 @@ class AuthenticationService {
     return null;
   }
 
-  Future<User?> singIpWithEmailAndPassword(
+  Future<User?> singInWithEmailAndPassword(
       String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(

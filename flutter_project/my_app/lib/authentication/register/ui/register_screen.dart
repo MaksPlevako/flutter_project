@@ -5,20 +5,22 @@ import 'package:my_app/authentication/authentication_services/authentication_ser
 import 'package:my_app/profile/models/user_model.dart';
 import 'package:my_app/profile/services/user_services.dart';
 import 'package:my_app/routing/app_routing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../data/user_data/user_data.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final AuthenticationService _auth = AuthenticationService();
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -147,7 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: _register,
+                      onPressed: () => _register(context, ref),
                       style: const ButtonStyle(
                         minimumSize: WidgetStatePropertyAll(Size(500.0, 50.0)),
                         backgroundColor: WidgetStatePropertyAll(Colors.orange),
@@ -181,21 +183,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _register() async {
+  void _register(BuildContext context, WidgetRef ref) async {
     String username = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    User? user = await _auth.singUpWithEmailAndPassword(email, password);
+    try {
+      // Регистрация пользователя через Firebase
+      User? user = await _auth.singUpWithEmailAndPassword(email, password);
 
-    if (user != null) {
-      print('connect successfully');
-      final UserModel userModel = UserModel(name: username, email: email);
-      final UserService _userService = UserService();
-      await _userService.createUser(userModel);
-      context.goNamed(NavRoutes.list.name);
-    } else {
-      print('failed to connect');
+      if (user != null) {
+        // Инициализация сервиса для работы с БД
+        final UserService _userService = UserService();
+
+        // Проверяем, существует ли пользователь в базе
+        UserModel? existingUser = await _userService.getUserByEmail(email);
+
+        if (existingUser == null) {
+          // Если пользователя нет, создаём нового
+          final UserModel newUser = UserModel(
+            name: username,
+            email: email,
+          );
+          await _userService.createUser(newUser);
+        } else {
+          print('User already exists in the database');
+        }
+
+        // Получаем пользователя из базы
+        UserModel? fetchedUser = await _userService.getUserByEmail(email);
+
+        if (fetchedUser != null) {
+          // Обновляем состояние пользователя через ref
+          ref.read(userProvider.notifier).updateUser(
+                name: fetchedUser.name,
+                email: fetchedUser.email,
+                userImg: fetchedUser.img,
+              );
+          // Переход на главную страницу
+          context.goNamed(NavRoutes.list.name);
+        } else {
+          print('Failed to fetch user from the database');
+        }
+      } else {
+        print('Registration failed');
+      }
+    } catch (e) {
+      print('Error during registration: $e');
     }
   }
 }

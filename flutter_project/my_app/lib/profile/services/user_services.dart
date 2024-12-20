@@ -15,12 +15,23 @@ class UserService {
   }
 
   // Read a User by Email
-  Future<UserModel?> getUser(String email) async {
-    DocumentSnapshot snapshot = await _db.collection('users').doc(email).get();
-    if (snapshot.exists) {
-      return UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
+  Future<UserModel?> getUserByEmail(String email) async {
+    try {
+      QuerySnapshot snapshot = await _db
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return UserModel.fromMap(
+            snapshot.docs.first.data() as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching user by email: $e');
+      return null;
     }
-    return null;
   }
 
   // Update an existing User
