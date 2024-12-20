@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,7 +8,7 @@ import '../service/morning_routine_service.dart';
 class NewMorningRoutine extends StatefulWidget {
   late int listLength;
 
-   NewMorningRoutine({super.key, required this.listLength});
+  NewMorningRoutine({super.key, required this.listLength});
 
   @override
   State<NewMorningRoutine> createState() => _NewMorningRoutineState();
@@ -19,25 +20,27 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
   String taskTitle = '';
 
   void _submitCreateRoutine() async {
-    widget.listLength++;
-    final String id = widget.listLength.toString();
-    if (taskTitle.isNotEmpty) {
-      MorningRoutineModel routine = MorningRoutineModel(
-        id: id,
-        title: taskTitle,
-        hour: selectedHour,
-        minute: selectedMinute,
-        checkbox: false,
-      );
-      final MorningRoutineService _service = MorningRoutineService();
-      await _service.createMorningRoutine(routine);
-      setState(() {
-        taskTitle = '';
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Morning routine added successfully!')),
-      );
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      widget.listLength++;
+      final String id = widget.listLength.toString();
+      if (taskTitle.isNotEmpty) {
+        MorningRoutineModel routine = MorningRoutineModel(
+            id: id,
+            title: taskTitle,
+            hour: selectedHour,
+            minute: selectedMinute,
+            checkbox: false,
+            user: user.uid,
+        );
+        final MorningRoutineService _service = MorningRoutineService();
+        await _service.createMorningRoutine(routine);
+        setState(() {
+          taskTitle = '';
+        });
+      }
+    }else{
+      print('user not login');
     }
   }
 
@@ -67,7 +70,7 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
                     const Text(
                       'Create New Routine',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
@@ -92,7 +95,7 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
                                   filled: true,
                                   fillColor: const Color(0xffF5F5F5),
                                   labelText:
-                                      'What do you want to do in the morning?',
+                                  'What do you want to do in the morning?',
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       width: 1,
@@ -161,7 +164,7 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
                                               style: BorderStyle.solid,
                                             ),
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                            BorderRadius.circular(8),
                                           ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -170,7 +173,7 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
                                               style: BorderStyle.solid,
                                             ),
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                            BorderRadius.circular(8),
                                           ),
                                         ),
                                         items: List.generate(25, (index) {
@@ -221,7 +224,7 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
                                               style: BorderStyle.solid,
                                             ),
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                            BorderRadius.circular(8),
                                           ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -230,7 +233,7 @@ class _NewMorningRoutineState extends State<NewMorningRoutine> {
                                               style: BorderStyle.solid,
                                             ),
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                            BorderRadius.circular(8),
                                           ),
                                         ),
                                         items: List.generate(61, (index) {

@@ -7,6 +7,7 @@ import 'package:my_app/profile/services/user_services.dart';
 import 'package:my_app/routing/app_routing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/user_data/user_data.dart';
+import '../../../profile/services/fire_and_ice_services.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -202,6 +203,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         if (existingUser == null) {
           // Если пользователя нет, создаём нового
           final UserModel newUser = UserModel(
+            id: user.uid,
             name: username,
             email: email,
           );
@@ -220,6 +222,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 email: fetchedUser.email,
                 userImg: fetchedUser.img,
               );
+          FireAndIceServices _fireAndIceServices = FireAndIceServices();
+          await _fireAndIceServices.createStreak();
           // Переход на главную страницу
           context.goNamed(NavRoutes.list.name);
         } else {

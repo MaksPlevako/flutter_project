@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_app/profile/models/user_model.dart';
 
 class UserService {
@@ -6,11 +7,18 @@ class UserService {
 
   // Create a new User
   Future<void> createUser(UserModel user) async {
-    try {
-      await _db.collection('users').add(user.toMap());
-      print("User created");
-    } catch (e) {
-      print("Error adding user: $e");
+    User? userProfile = FirebaseAuth.instance.currentUser;
+    if(userProfile != null){
+      try {
+        String userId = userProfile.uid;
+        _db.collection('fire_and_ice_streak').doc(userId);
+        await _db.collection('users').doc(userId).set(user.toMap());
+        print("User created");
+      } catch (e) {
+        print("Error adding user: $e");
+      }
+    }else{
+      print('user not login');
     }
   }
 

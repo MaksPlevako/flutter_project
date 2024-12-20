@@ -1,16 +1,18 @@
 class MorningRoutineModel {
-  String id; // Unique identifier for the routine
-  bool checkbox;
-  String title; // Title of the routine
+  String id;
+  bool? checkbox;
+  String title;
   int hour;
-  int minute; // List of activities in the routine
+  int minute;
+  String user;
 
   MorningRoutineModel({
     required this.id,
-    required this.checkbox,
+    this.checkbox,
     required this.title,
     required this.hour,
     required this.minute,
+    required this.user,
   });
 
   // Convert a MorningRoutine object into a Map
@@ -21,17 +23,19 @@ class MorningRoutineModel {
       'title': title,
       'hour': hour,
       'minute': minute,
+      'user': user,
     };
   }
 
   // Create a MorningRoutine object from a Map
   factory MorningRoutineModel.fromMap(Map<String, dynamic> map) {
     return MorningRoutineModel(
-      id: map['id'],
+      id: map['id'] ?? '',
       checkbox: map['checkbox'] ?? false,
       title: map['title'] ?? '',
       hour: map['hour'] ?? 0,
       minute: map['minute'] ?? 0,
+      user: map['user'] ?? '',
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:my_app/authentication/login/ui/login_screen.dart';
 import 'package:my_app/authentication/register/ui/register_screen.dart';
 import 'package:my_app/list/ui/list_screen.dart';
 import 'package:my_app/list/ui/new_morning_routine.dart';
+import 'package:my_app/profile/ui/profile_screen.dart';
 import 'package:my_app/settings/ui/settings_screen.dart';
 
 enum NavRoutes {
@@ -26,7 +27,7 @@ enum NavRoutes {
 }
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: NavRoutes.list.path,
+  initialLocation: NavRoutes.register.path,
   routes: <RouteBase>[
     GoRoute(
       name: NavRoutes.main.name,
@@ -65,21 +66,21 @@ final GoRouter appRouter = GoRouter(
       name: NavRoutes.login.name,
       path: NavRoutes.login.path,
       builder: (BuildContext context, GoRouterState state) {
-        return LoginScreen();
+        return const LoginScreen();
       },
     ),
     GoRoute(
       name: NavRoutes.register.name,
       path: NavRoutes.register.path,
       builder: (BuildContext context, GoRouterState state) {
-        return RegisterScreen();
+        return const RegisterScreen();
       },
     ),
     GoRoute(
       name: NavRoutes.profile.name,
       path: NavRoutes.profile.path,
       builder: (BuildContext context, GoRouterState state) {
-        return const ListScreen();
+        return const ProfileScreen();
       },
     ),
     GoRoute(
@@ -101,13 +102,6 @@ final GoRouter appRouter = GoRouter(
       path: NavRoutes.block.path,
       builder: (BuildContext context, GoRouterState state) {
         return const SettingsScreen(title: 'Block Page');
-      },
-    ),
-    GoRoute(
-      name: NavRoutes.people.name,
-      path: NavRoutes.people.path,
-      builder: (BuildContext context, GoRouterState state) {
-        return const SettingsScreen(title: 'People Page');
       },
     ),
     GoRoute(

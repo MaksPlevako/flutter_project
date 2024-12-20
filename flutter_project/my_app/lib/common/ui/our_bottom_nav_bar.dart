@@ -21,7 +21,7 @@ class OurBottomNavBar extends StatelessWidget {
           return 2;
         case '/block':
           return 3;
-        case '/people':
+        case '/profile':
           return 4;
         default:
           return 0;
@@ -45,7 +45,7 @@ class OurBottomNavBar extends StatelessWidget {
             context.goNamed(NavRoutes.block.name);
             break;
           case 4:
-            context.goNamed(NavRoutes.people.name);
+            context.goNamed(NavRoutes.profile.name);
             break;
         }
       },
@@ -89,7 +89,7 @@ class OurBottomNavBar extends StatelessWidget {
             icon: Icons.people_alt_outlined,
             isSelected: _getSelectedIndex(currentLocation) == 4,
           ),
-          label: 'People',
+          label: 'Profile',
         ),
       ],
     );

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_app/data/activities_data/fire_state.dart';
-import 'package:my_app/data/activities_data/ice_state.dart';
+import 'package:my_app/data/activities_data/fire_and_ice_state.dart';
 import 'package:my_app/routing/app_routing.dart';
-
 import '../../data/user_data/user_data.dart';
 
 class OurAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
@@ -19,14 +17,19 @@ class OurAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
 
 class _OurAppBar extends ConsumerState<OurAppBar> {
   @override
+  void initState() {
+    super.initState();
+
+    ref.read(fireAndIceProvider.notifier).setFireAndIceState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final iceState = ref.watch(iceProvider);
-    final fireState = ref.watch(fireProvider);
-    UserState userState =
-        ref.read(userProvider); // Получение текущего состояния
+    final fireState = ref.watch(fireAndIceProvider);
+    UserState userState = ref.read(userProvider);
     String userImage = userState.userImg ??
-        'https://cdn-icons-png.flaticon.com/512/147/147144.png'; // По умолчанию изображение
-    String userEmail = userState.email;
+        'https://cdn-icons-png.flaticon.com/512/147/147144.png';
+
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       title: Padding(
@@ -93,7 +96,7 @@ class _OurAppBar extends ConsumerState<OurAppBar> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          iceState.ice.toString(),
+                          fireState.ice.toString(),
                           style: const TextStyle(
                             fontSize: 17, // Размер шрифта
                             color: Colors.blue, // Цвет текста
@@ -106,19 +109,17 @@ class _OurAppBar extends ConsumerState<OurAppBar> {
                 ],
               ),
             ),
-            CircleAvatar(
-              child: IconButton(
-                onPressed: () {
-                  if (userEmail.isNotEmpty) {
-                    context.goNamed(NavRoutes.profile.name);
-                  } else {
-                    context.goNamed(NavRoutes.register.name);
-                  }
-                },
-                icon: Image.network(
+            IconButton(
+              onPressed: () => context.goNamed(NavRoutes.profile.name),
+              icon: ClipOval(
+                child: Image.network(
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
                   userImage,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.error); // Если изображение не загружается
+                    return const Icon(
+                        Icons.error); // Если изображение не загружается
                   },
                 ),
               ),

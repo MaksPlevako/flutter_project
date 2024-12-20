@@ -1,11 +1,11 @@
 class UserModel {
-  String? id;
+  String id;
   String name;
   String email;
   String? img;
 
   UserModel({
-    this.id,
+    required this.id,
     required this.name,
     required this.email,
     String?
@@ -26,7 +26,7 @@ class UserModel {
 // Create a User object from a Map
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'],
+      id: map['id'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       img:

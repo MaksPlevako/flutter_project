@@ -19,8 +19,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final AuthenticationService _auth = AuthenticationService();
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -154,10 +154,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     User? user = await _auth.singInWithEmailAndPassword(email, password);
 
     if (user != null) {
-      print('connect successfully');
-      final UserService _userService = UserService();
+      final UserService userService = UserService();
       // Запрос данных пользователя из базы данных
-      UserModel? fetchedUser = await _userService.getUserByEmail(email);
+      UserModel? fetchedUser = await userService.getUserByEmail(email);
 
       if (fetchedUser != null) {
         // Обновляем состояние через UserNotifier
